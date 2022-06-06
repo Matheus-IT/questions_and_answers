@@ -19,8 +19,8 @@ class _QuizzAppState extends State<QuizzApp> {
   List<Question> _questions = Database.selectRandom(4);
   int _currentQuestionIndex = 0;
 
-  void _checkAnswer() {
-    debugPrint('Working!');
+  void _checkAnswer(bool isCorrect) {
+    debugPrint('$isCorrect');
   }
 
   @override
@@ -28,8 +28,10 @@ class _QuizzAppState extends State<QuizzApp> {
     final options = List<OptionButton>.generate(
       _questions[_currentQuestionIndex].options.length,
       (index) => OptionButton(
-          text: _questions[_currentQuestionIndex].options[index].text,
-          onPressed: _checkAnswer),
+        text: _questions[_currentQuestionIndex].options[index].text,
+        isCorrect: _questions[_currentQuestionIndex].options[index].correct,
+        onPressed: _checkAnswer,
+      ),
     );
 
     return MaterialApp(

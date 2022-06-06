@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class OptionButton extends StatelessWidget {
   final String text;
-  final void Function()? onPressed;
+  final Function onPressed;
+  final bool isCorrect;
 
   const OptionButton({
     Key? key,
     required this.onPressed,
     required this.text,
+    required this.isCorrect,
   }) : super(key: key);
 
   @override
@@ -15,7 +17,7 @@ class OptionButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: () => onPressed(isCorrect),
         child: Text(text),
       ),
     );
