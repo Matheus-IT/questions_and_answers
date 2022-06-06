@@ -16,8 +16,8 @@ class QuizzApp extends StatefulWidget {
 }
 
 class _QuizzAppState extends State<QuizzApp> {
-  List<Question> _questions = Database.selectRandom(4);
-  int _currentQuestionIndex = 0;
+  final List<Question> _questions = Database.selectRandom(4);
+  final int _currentQuestionIndex = 0;
 
   void _checkAnswer(bool isCorrect) {
     debugPrint('$isCorrect');
