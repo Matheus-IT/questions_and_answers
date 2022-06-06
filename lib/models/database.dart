@@ -64,5 +64,16 @@ class Database {
     ),
   ];
 
-  int get questionCount => _questions.length;
+  static int get questionCount => _questions.length;
+
+  static List<Question> selectRandom(int count) {
+    final List<int> indexes = List<int>.generate(
+      questionCount,
+      (index) => index,
+    );
+
+    indexes.shuffle();
+
+    return List<Question>.generate(count, (index) => _questions[index]);
+  }
 }
