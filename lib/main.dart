@@ -19,13 +19,17 @@ class _QuizzAppState extends State<QuizzApp> {
   List<Question> _questions = Database.selectRandom(4);
   int _currentQuestionIndex = 0;
 
+  void _checkAnswer() {
+    debugPrint('Working!');
+  }
+
   @override
   Widget build(BuildContext context) {
     final options = List<OptionButton>.generate(
       _questions[_currentQuestionIndex].options.length,
       (index) => OptionButton(
-        text: _questions[_currentQuestionIndex].options[index].text,
-      ),
+          text: _questions[_currentQuestionIndex].options[index].text,
+          onPressed: _checkAnswer),
     );
 
     return MaterialApp(
