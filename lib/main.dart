@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:questions_and_answers/models/database.dart';
-import 'package:questions_and_answers/models/question.dart';
 
-import 'widgets/option_button.dart';
+import 'models/database.dart';
+import 'models/question.dart';
+import 'screens/question_screen.dart';
+import 'screens/result_screen.dart';
 
 void main() {
   runApp(const QuizzApp());
@@ -16,43 +17,70 @@ class QuizzApp extends StatefulWidget {
 }
 
 class _QuizzAppState extends State<QuizzApp> {
-  final List<Question> _questions = Database.selectRandom(4);
-  final int _currentQuestionIndex = 0;
+  final _messengerKey = GlobalKey<ScaffoldMessengerState>();
+  List<Question> _questions = Database.selectRandom(4);
+  int _currentQuestionIndex = 0;
+  int _score = 0;
 
   void _checkAnswer(bool isCorrect) {
-    debugPrint('$isCorrect');
+    String msg = '';
+
+    if (isCorrect) {
+      msg = 'Resposta correta';
+      setState(() => _score += _questions[_currentQuestionIndex].value);
+    } else {
+      msg = 'Resposta incorreta';
+    }
+
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(
+    //     content: Text('Hello'),
+    //     duration: Duration(
+    //       seconds: 1,
+    //     ),
+    //   ),
+    // );
+
+    setState(() {
+      _currentQuestionIndex++;
+    });
+
+    debugPrint('score $_score');
+    debugPrint('index $_currentQuestionIndex');
+  }
+
+  int get _totalScore {
+    int total = 0;
+
+    _questions.forEach((element) {
+      total += element.value;
+    });
+
+    return total;
+  }
+
+  void _restart() {
+    setState(() {
+      _score = 0;
+      _currentQuestionIndex = 0;
+      _questions = Database.selectRandom(4);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final options = List<OptionButton>.generate(
-      _questions[_currentQuestionIndex].options.length,
-      (index) => OptionButton(
-        text: _questions[_currentQuestionIndex].options[index].text,
-        isCorrect: _questions[_currentQuestionIndex].options[index].correct,
-        onPressed: _checkAnswer,
-      ),
-    );
-
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Quizz')),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                _questions[_currentQuestionIndex].text,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+      scaffoldMessengerKey: _messengerKey,
+      home: (_currentQuestionIndex < _questions.length)
+          ? QuestionScreen(
+              question: _questions[_currentQuestionIndex],
+              onAnswer: _checkAnswer,
+            )
+          : ResultScreen(
+              score: _score,
+              totalScore: _totalScore,
+              onRestart: _restart,
             ),
-            ...options,
-          ],
-        ),
-      ),
     );
   }
 }
