@@ -32,6 +32,7 @@ class _QuizzAppState extends State<QuizzApp> {
       msg = 'Resposta incorreta';
     }
 
+    // This one didn't work:
     // ScaffoldMessenger.of(context).showSnackBar(
     //   const SnackBar(
     //     content: Text('Hello'),
